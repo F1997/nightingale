@@ -1,0 +1,369 @@
+{
+    "name": "机器台账表格视图",
+    "tags": "",
+    "ident": "",
+    "configs": {
+        "links": [
+            {
+                "targetBlank": true,
+                "title": "n9e",
+                "url": "https://n9e.github.io/"
+            },
+            {
+                "targetBlank": true,
+                "title": "author",
+                "url": "http://flashcat.cloud/"
+            }
+        ],
+        "panels": [
+            {
+                "type": "hexbin",
+                "id": "21b8b3ab-26aa-47cb-b814-f310f2d143aa",
+                "layout": {
+                    "h": 5,
+                    "w": 12,
+                    "x": 0,
+                    "y": 0,
+                    "i": "21b8b3ab-26aa-47cb-b814-f310f2d143aa",
+                    "isResizable": true
+                },
+                "version": "3.0.0",
+                "datasourceCate": "prometheus",
+                "datasourceValue": "${prom}",
+                "targets": [
+                    {
+                        "refId": "A",
+                        "expr": "cpu_usage_active{cpu=\"cpu-total\", ident=~\"$ident\"}",
+                        "legend": "{{ident}}",
+                        "instant": true
+                    }
+                ],
+                "transformations": [
+                    {
+                        "id": "organize",
+                        "options": {}
+                    }
+                ],
+                "name": "CPU利用率",
+                "maxPerRow": 4,
+                "custom": {
+                    "textMode": "valueAndName",
+                    "calc": "lastNotNull",
+                    "colorRange": [
+                        "thresholds"
+                    ],
+                    "detailUrl": "/dashboards/linux-host-by-categraf?ident=${__field.labels.ident}"
+                },
+                "options": {
+                    "thresholds": {
+                        "steps": [
+                            {
+                                "color": "#ef3c3c",
+                                "value": 95,
+                                "type": ""
+                            },
+                            {
+                                "color": "#ff656b",
+                                "value": 85,
+                                "type": ""
+                            },
+                            {
+                                "color": "#ffae39",
+                                "value": 75,
+                                "type": ""
+                            },
+                            {
+                                "color": "#2c9d3d",
+                                "value": null,
+                                "type": "base"
+                            }
+                        ]
+                    },
+                    "standardOptions": {
+                        "util": "percent"
+                    }
+                }
+            },
+            {
+                "type": "hexbin",
+                "id": "86d4a502-21f7-4981-9b38-ed8e696b6f49",
+                "layout": {
+                    "h": 5,
+                    "w": 12,
+                    "x": 12,
+                    "y": 0,
+                    "i": "872b2040-c5b0-43fe-92c7-e37cb77edffc",
+                    "isResizable": true
+                },
+                "version": "3.0.0",
+                "datasourceCate": "prometheus",
+                "datasourceValue": "${prom}",
+                "targets": [
+                    {
+                        "refId": "A",
+                        "expr": "mem_used_percent{ident=~\"$ident\"}",
+                        "legend": "{{ident}}",
+                        "instant": true
+                    }
+                ],
+                "transformations": [
+                    {
+                        "id": "organize",
+                        "options": {}
+                    }
+                ],
+                "name": "内存利用率",
+                "maxPerRow": 4,
+                "custom": {
+                    "textMode": "valueAndName",
+                    "calc": "lastNotNull",
+                    "colorRange": [
+                        "thresholds"
+                    ],
+                    "detailUrl": "/dashboards/linux-host-by-categraf?ident=${__field.labels.ident}"
+                },
+                "options": {
+                    "thresholds": {
+                        "steps": [
+                            {
+                                "color": "#ef3c3c",
+                                "value": 95,
+                                "type": ""
+                            },
+                            {
+                                "color": "#ff656b",
+                                "value": 85,
+                                "type": ""
+                            },
+                            {
+                                "color": "#ffae39",
+                                "value": 75,
+                                "type": ""
+                            },
+                            {
+                                "color": "#2c9d3d",
+                                "value": null,
+                                "type": "base"
+                            }
+                        ]
+                    },
+                    "standardOptions": {
+                        "util": "percent"
+                    }
+                }
+            },
+            {
+                "type": "table",
+                "id": "77bf513a-8504-4d33-9efe-75aaf9abc9e4",
+                "layout": {
+                    "h": 11,
+                    "w": 24,
+                    "x": 0,
+                    "y": 5,
+                    "i": "77bf513a-8504-4d33-9efe-75aaf9abc9e4",
+                    "isResizable": true
+                },
+                "version": "3.0.0",
+                "datasourceCate": "prometheus",
+                "datasourceValue": "${prom}",
+                "targets": [
+                    {
+                        "expr": "avg(cpu_usage_active{cpu=\"cpu-total\", ident=~\"$ident\"}) by (ident)",
+                        "legend": "CPU使用率",
+                        "refId": "A"
+                    },
+                    {
+                        "expr": "avg(mem_used_percent{ident=~\"$ident\"}) by (ident)",
+                        "legend": "内存使用率",
+                        "refId": "B"
+                    },
+                    {
+                        "expr": "avg(mem_total{ident=~\"$ident\"}) by (ident)",
+                        "legend": "总内存",
+                        "refId": "C"
+                    },
+                    {
+                        "expr": "avg(disk_used_percent{ident=~\"$ident\",path=\"/\"}) by (ident)",
+                        "legend": "根分区使用率",
+                        "refId": "D"
+                    }
+                ],
+                "transformations": [
+                    {
+                        "id": "organize",
+                        "options": {
+                            "renameByName": {
+                                "ident": "机器"
+                            }
+                        }
+                    }
+                ],
+                "name": "机器列表",
+                "maxPerRow": 4,
+                "custom": {
+                    "showHeader": true,
+                    "colorMode": "background",
+                    "calc": "lastNotNull",
+                    "displayMode": "labelValuesToRows",
+                    "aggrDimension": "ident",
+                    "sortColumn": "ident",
+                    "sortOrder": "ascend",
+                    "links": [
+                        {
+                            "title": "详情",
+                            "url": "/dashboards/linux-host-by-categraf?ident=${__field.labels.ident}"
+                        }
+                    ]
+                },
+                "options": {
+                    "standardOptions": {}
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "value": "A"
+                        },
+                        "properties": {
+                            "standardOptions": {
+                                "util": "percent"
+                            },
+                            "valueMappings": [
+                                {
+                                    "match": {
+                                        "to": 65
+                                    },
+                                    "result": {
+                                        "color": "#2c9d3d"
+                                    },
+                                    "type": "range"
+                                },
+                                {
+                                    "match": {
+                                        "to": 90
+                                    },
+                                    "result": {
+                                        "color": "#ff656b"
+                                    },
+                                    "type": "range"
+                                },
+                                {
+                                    "match": {
+                                        "from": 90
+                                    },
+                                    "result": {
+                                        "color": "#f50505"
+                                    },
+                                    "type": "range"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "matcher": {
+                            "value": "B"
+                        },
+                        "properties": {
+                            "standardOptions": {
+                                "util": "percent"
+                            },
+                            "valueMappings": [
+                                {
+                                    "match": {
+                                        "to": 65
+                                    },
+                                    "result": {
+                                        "color": "#2c9d3d"
+                                    },
+                                    "type": "range"
+                                },
+                                {
+                                    "match": {
+                                        "to": 90
+                                    },
+                                    "result": {
+                                        "color": "#ff656b"
+                                    },
+                                    "type": "range"
+                                },
+                                {
+                                    "match": {
+                                        "from": 90
+                                    },
+                                    "result": {
+                                        "color": "#fa0a0a"
+                                    },
+                                    "type": "range"
+                                }
+                            ]
+                        },
+                        "type": "special"
+                    },
+                    {
+                        "matcher": {
+                            "value": "C"
+                        },
+                        "properties": {
+                            "standardOptions": {
+                                "decimals": 2,
+                                "util": "bytesIEC"
+                            },
+                            "valueMappings": []
+                        },
+                        "type": "special"
+                    },
+                    {
+                        "matcher": {
+                            "value": "D"
+                        },
+                        "properties": {
+                            "standardOptions": {
+                                "decimals": 2,
+                                "util": "percent"
+                            },
+                            "valueMappings": [
+                                {
+                                    "type": "range",
+                                    "result": {
+                                        "color": "#2c9d3d"
+                                    },
+                                    "match": {
+                                        "to": 90
+                                    }
+                                },
+                                {
+                                    "type": "range",
+                                    "result": {
+                                        "color": "#ff656b"
+                                    },
+                                    "match": {
+                                        "from": 90
+                                    }
+                                }
+                            ]
+                        },
+                        "type": "special"
+                    }
+                ]
+            }
+        ],
+        "var": [
+            {
+                "definition": "prometheus",
+                "name": "prom",
+                "type": "datasource"
+            },
+            {
+                "allOption": true,
+                "datasource": {
+                    "cate": "prometheus",
+                    "value": "${prom}"
+                },
+                "definition": "label_values(system_load1,ident)",
+                "multi": true,
+                "name": "ident",
+                "type": "query"
+            }
+        ],
+        "version": "3.0.0"
+    }
+}
